@@ -132,7 +132,7 @@ The concepts behind this library are the following ones:
 
 The usage is really simple, the concepts behind this library are the following ones: 
 
-1 - Create your **View** interface by extending the **BaseView**. **BaseView** is an empty interface that acts as water mark for the **Presenter**.
+1 - Create your **View** interface by extending the [**BaseView**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/view/BaseView.java). **BaseView** is an empty interface that acts as water mark for the **Presenter**.
 
 ```java
 public interface DetailsView extends BaseView {
@@ -143,7 +143,7 @@ public interface DetailsView extends BaseView {
 }
 ```
 
-**2** - Create an **Interactor** class by extending the **BaseInteractor** class. The **BaseInteractor** provides you a set of helper methods to deal with **background execution and UIThread interaction**. The methods are the following ones: 
+**2** - Create an **Interactor** class by extending the [**BaseInteractor**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/interactor/BaseInteractor.java) class. The **BaseInteractor** provides you a set of helper methods to deal with **background execution and UIThread interaction**. The methods are the following ones: 
 
 - **runOnUiThread** → use it when you need to post data to the main thread.
 - **runOnBackground** → use it when you need to make background processing. 
@@ -170,7 +170,7 @@ public final class DetailsInteractor extends BaseInteractor {
   }
 }
 ```
-3 - Create a **Presenter** class by extending the **BasePresenter** class. The **BasePresenter** provides you with a set of helper methods to deal with **View** management. The methods are the following ones:
+3 - Create a **Presenter** class by extending the [**BasePresenter**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/presenter/BasePresenter.java) class. The **BasePresenter** provides you with a set of helper methods to deal with **View** management. The methods are the following ones:
 
 - **isViewAttached** → check if you have set the view to the presenter, returns to you a boolean value that you should handle in your presenter implementation. 
 - **attachView** → add the view to the presenter, so you can start to handle the cicle of view - presenter - interactor interaction.
@@ -206,13 +206,14 @@ public final class DetailsPresenter extends BasePresenter<DetailsView> {
 }
 ```
 
-##Complement with Android 
+4 - Attach this cycle with Android specific classes. You can choice an **Activity/Fragment or also a custom view**. In this case I will show you an example with **Fragment** that inherits from [**BaseFragment**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/ui/fragment/BaseFragment.java)
 
-Well, that's the basics behind the library. At this point, you are asking yourself, how do I connect this classes with a Android??. Well, that's pretty simple! 
+The **BaseFragment** comes with a resumed lifecycle, and a set of methods to implement. The methods are the following ones:
 
-I work a lot with **Fragments**, they simplify a lot my work flow. I think in them as the **View** in Android. I let Activity manage Fragments, don't want to charge them, since they have a lot of responsabilities. 
-
-To finalize the explanation, check the sample implementation: 
+- **addPresenter** → in this method you have to create you instance of Presenter. 
+- **getLayout** → in this method you have pass the id reference to the layout. This library comes with **ButterKnife**, to provide efficiency I have implemented **onCreateView** in BaseFragment where I call **ButterKnife.bind** method, so you have view binding out of the box! :smile:
+- **getPresenter** → simple getter, to make your access to the presenter more cleaner.
+- **onPresenterCreated** → In this method you should attach the view to the presenter in order to start working.
 
 ```java
 public final class DetailsFragment extends BaseFragment<DetailsPresenter> implements DetailsView {
@@ -250,18 +251,6 @@ public final class DetailsFragment extends BaseFragment<DetailsPresenter> implem
     }
 } 
 ```
-
-As you see, this Fragment is a **generic** class that solves some troubles for you, **It has the ability to detach view for you in onDestroyView so you don't have to, auto inject views with butter knife, and lifecycle methods simplified**. 
-
-When you inherit it, you will get the following methods to implement:
-
-- **addPresenter** → in this method you have to create you instance of Presenter. 
-
-- **getLayout** → in this method you have pass the id reference to the layout. This library comes with **ButterKnife**, to provide efficiency I have implemented **onCreateView** in BaseFragment where I call **ButterKnife.bind** method, so you have view binding out of the box! :smile:
-
-- **getPresenter** → simple getter, to make your access to the presenter more cleaner.
-
-- **onPresenterCreated** → In this method you should attach the view to the presenter in order to start working.
 
 ##Some notes on ButterKnife
 
