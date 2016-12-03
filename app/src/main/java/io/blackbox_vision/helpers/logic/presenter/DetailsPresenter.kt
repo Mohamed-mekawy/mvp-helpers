@@ -15,6 +15,14 @@ class DetailsPresenter : BasePresenter<DetailsView>(), OnSuccessListener<Bundle>
         interactor = DetailsInteractor()
     }
 
+    override fun onViewAttached(view: DetailsView?) {
+        //reload app state
+    }
+
+    override fun onViewDetached(view: DetailsView?) {
+        //save app state
+    }
+
     fun findRequiredInformation(id: String) {
         if (isViewAttached) {
             interactor.retrieveDetailsFromService(id, this, this)
