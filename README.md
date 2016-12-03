@@ -139,11 +139,11 @@ The usage is really simple, the concepts behind this library are the following o
 **1** - Create your **View** interface by extending the [**BaseView**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/view/BaseView.java). **BaseView** is an empty interface that acts as water mark for the **Presenter**.
 
 ```java
-public interface DetailsView extends BaseView {
+interface DetailsView : BaseView {
 
-  void onInfoReceived(@NonNull Bundle information);
-  
-  void onInfoError(@NonNull String errorMessage);
+    fun onInfoReceived(information: Bundle)
+
+    fun onInfoError(errorMessage: String)
 }
 ```
 
@@ -155,23 +155,22 @@ public interface DetailsView extends BaseView {
 - **cancelTask** → use it when you want to cancel a scheduled task. 
 
 ```java
-//This example uses Java 8 features, I assume the usage of retrolambda
-public final class DetailsInteractor extends BaseInteractor {
+class DetailsInteractor : BaseInteractor() {
 
-  public void retrieveDetailsFromService(@NonNull final String id, @NonNull final OnSuccessListener<Bundle> successListener, @NonNull final OnErrorListener<String> errorListener) {
-    runOnBackground(() -> {
-      //Getting data from somewhere
-      Bundle data = ... ;   
-      
-      runOnUiThread(() -> {
-      	if (data != null) {
-			successListener.onSuccess(data);	
-		} else {
-			errorListener.onError("Ups, something went wrong");
-		}
-      });
-    })
-  }
+    fun retrieveDetailsFromService(id: String, successListener: OnSuccessListener<Bundle>, errorListener: OnErrorListener<String>) {
+        runOnBackground(Runnable {
+            //Getting data from somewhere
+            val data = MockUtils.getMockedData(id)
+
+            runOnUiThread(Runnable {
+                if (data != null) {
+                    successListener.onSuccess(data)
+                } else {
+                    errorListener.onError("Ups, something went wrong")
+                }
+            })
+        })
+    }
 }
 ```
 **3** - Create a **Presenter** class by extending the [**BasePresenter**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/presenter/BasePresenter.java) class. The **BasePresenter** provides you with a set of helper methods to deal with **View** management. The methods are the following ones:
@@ -182,31 +181,30 @@ public final class DetailsInteractor extends BaseInteractor {
 - **getView** → simple getter, to make your access to the view defined more cleaner.
 
 ```java
-//I use method references from Java 8 to point the callbacks to interactor, I assume a working project with Retrolambda
-public final class DetailsPresenter extends BasePresenter<DetailsView> {
-  private DetailsInteractor interactor;
-  
-  public DetailsPresenter() { 
-    interactor = new DetailsInteractor();
-  }
-  
-  public void getInformationFromId(@NonNull String id) {
-    if (isViewAttached()) {
-      interactor.retrieveDetailsFromService(id, this::onSuccess, this::onError);
+class DetailsPresenter : BasePresenter<DetailsView>(), OnSuccessListener<Bundle>, OnErrorListener<String> {
+    private val interactor: DetailsInteractor
+
+    init {
+        interactor = DetailsInteractor()
     }
-  }
-  
-  private void onSuccess(@NonNull Bundle data) {
-    if (isViewAttached()) {
-      getView().onInfoReceived(data);
+
+    fun findRequiredInformation(id: String) {
+        if (isViewAttached) {
+            interactor.retrieveDetailsFromService(id, this, this)
+        }
     }
-  }
-  
-  private void onError(@NonNull String errorMessage) {
-    if (isViewAttached()) {
-      getView().onInfoError(errorMessage);
+
+    override fun onSuccess(data: Bundle) {
+        if (isViewAttached) {
+            view!!.onInfoReceived(data)
+        }
     }
-  }
+
+    override fun onError(error: String) {
+        if (isViewAttached) {
+            view!!.onInfoError(error)
+        }
+    }
 }
 ```
 
@@ -220,40 +218,32 @@ The **BaseFragment** comes with a resumed lifecycle, and a set of methods to imp
 - **onPresenterCreated** → In this method you should attach the view to the presenter in order to start working.
 
 ```java
-public final class DetailsFragment extends BaseFragment<DetailsPresenter> implements DetailsView {
-    
-    @Override
-    public addPresenter() {
-      	return new DetailsPresenter();
+class DetailsFragment : BaseFragment<DetailsPresenter>(), DetailsView {
+    override fun addPresenter(): DetailsPresenter {
+        return DetailsPresenter()
     }
-    
-    @LayoutRes
-    @Override
-    public int getLayout() {
-      	return R.layout.fragment_details;
+
+    override val layout: Int
+        @LayoutRes
+        get() = R.layout.fragment_details
+
+    override fun onPresenterCreated(presenter: DetailsPresenter) {
+        presenter.attachView(this)
     }
-    
-    @Override
-    void onPresenterCreated(@NonNull DetailsPresenter presenter) {
-    	presenter.attachView(this);
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+	presenter!!.findRequiredInformation("ssdWRGD132")
     }
-    
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getPresenter().getInformationFromId("ssdWRGD132");
+
+    override fun onInfoReceived(information: Bundle) {
+        Toast.makeText(context, "This is the information ---> ${information.get(MockUtils.SAMPLE)!!}", Toast.LENGTH_LONG).show()
     }
-    
-    @Override
-    void onInfoReceived(@NonNull Bundle information) {
-       Toast.makeText(getContext(), information.toString(), Toast.LENGTH_SHORT).show();
+
+    override fun onInfoError(errorMessage: String) {
+        Toast.makeText(context, "This is the error ---> $errorMessage", Toast.LENGTH_SHORT).show()
     }
-    
-    @Override
-    void onInfoError(@NonNull String errorMessage) {
-       Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-    }
-} 
+}
 ```
 
 ##Some notes on ButterKnife
