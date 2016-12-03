@@ -15,61 +15,6 @@ Check the following instructions under this **README** in order to get a project
 
 Actually I don't have this library in **JCenter/Maven Central**, so if you want to use, follow the instructions. The library is distributed for Java and Kotlin. 
 
-###Java version  
-
-**Gradle**
-
-- Add it in your root build.gradle at the end of repositories:
-```gradle
-allprojects {
-	repositories {
-		...
-		maven { 
-			url "https://jitpack.io" 
-		}
-	}
-}
-```
-
-- Add the dependency:
-```gradle
-dependencies {
-	 compile 'com.github.BlackBoxVision:mvp-helpers:v0.1.0'
-}
-```
-
-**Maven**
-
-- Add this line to repositories section in pom.xml:
-```xml
-<repositories>
-	<repository>
-	   <id>jitpack.io</id>
-		 <url>https://jitpack.io</url>
-	</repository>
-</repositories>
-```
-- Add the dependency:
-```xml
-<dependency>
-  <groupId>com.github.BlackBoxVision</groupId>
-  <artifactId>mvp-helpers</artifactId>
-	<version>v0.1.0</version>
-</dependency>
-```
-
-**SBT**
-
-- Add it in your build.sbt at the end of resolvers:
-```sbt
-  resolvers += "jitpack" at "https://jitpack.io"
-```
-
-- Add the dependency:
-```sbt
-  libraryDependencies += "com.github.BlackBoxVision" % "mvp-helpers" % "v0.1.0"	
-```
-
 ###Kotlin version
 
 - Add it in your root build.gradle at the end of repositories:
@@ -136,7 +81,7 @@ The concepts behind this library are the following ones:
 
 The usage is really simple, the concepts behind this library are the following ones: 
 
-**1** - Create your **View** interface by extending the [**BaseView**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/view/BaseView.java). **BaseView** is an empty interface that acts as water mark for the **Presenter**.
+**1** - Create your **View** interface by extending the [**BaseView**](https://github.com/BlackBoxVision/mvp-helpers/blob/kotlin/library/src/main/java/io/blackbox_vision/mvphelpers/logic/view/BaseView.kt). **BaseView** is an empty interface that acts as water mark for the **Presenter**.
 
 ```java
 interface DetailsView : BaseView {
@@ -147,7 +92,7 @@ interface DetailsView : BaseView {
 }
 ```
 
-**2** - Create an **Interactor** class by extending the [**BaseInteractor**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/interactor/BaseInteractor.java) class. The **BaseInteractor** provides you a set of helper methods to deal with **background execution and UIThread interaction**. The methods are the following ones: 
+**2** - Create an **Interactor** class by extending the [**BaseInteractor**](https://github.com/BlackBoxVision/mvp-helpers/blob/kotlin/library/src/main/java/io/blackbox_vision/mvphelpers/logic/interactor/BaseInteractor.kt) class. The **BaseInteractor** provides you a set of helper methods to deal with **background execution and UIThread interaction**. The methods are the following ones: 
 
 - **runOnUiThread** → use it when you need to post data to the main thread.
 - **runOnBackground** → use it when you need to make background processing. 
@@ -173,7 +118,7 @@ class DetailsInteractor : BaseInteractor() {
     }
 }
 ```
-**3** - Create a **Presenter** class by extending the [**BasePresenter**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/logic/presenter/BasePresenter.java) class. The **BasePresenter** provides you with a set of helper methods to deal with **View** management. The methods are the following ones:
+**3** - Create a **Presenter** class by extending the [**BasePresenter**](https://github.com/BlackBoxVision/mvp-helpers/blob/kotlin/library/src/main/java/io/blackbox_vision/mvphelpers/logic/presenter/BasePresenter.kt) class. The **BasePresenter** provides you with a set of helper methods to deal with **View** management. The methods are the following ones:
 
 - **isViewAttached** → check if you have set the view to the presenter, returns to you a boolean value that you should handle in your presenter implementation. 
 - **attachView** → add the view to the presenter, so you can start to handle the cicle of view - presenter - interactor interaction.
@@ -208,7 +153,7 @@ class DetailsPresenter : BasePresenter<DetailsView>(), OnSuccessListener<Bundle>
 }
 ```
 
-**4** - Attach this cycle with Android specific classes. You can choice an **Activity/Fragment or also a custom view**. In this case I will show you an example with **Fragment** that inherits from [**BaseFragment**](https://github.com/BlackBoxVision/mvp-helpers/blob/master/library/src/main/java/io/blackbox_vision/mvphelpers/ui/fragment/BaseFragment.java)
+**4** - Attach this cycle with Android specific classes. You can choice an **Activity/Fragment or also a custom view**. In this case I will show you an example with **Fragment** that inherits from [**BaseFragment**](https://github.com/BlackBoxVision/mvp-helpers/blob/kotlin/library/src/main/java/io/blackbox_vision/mvphelpers/ui/fragment/BaseFragment.kt)
 
 The **BaseFragment** comes with a resumed lifecycle, and a set of methods to implement. The methods are the following ones:
 
@@ -266,21 +211,6 @@ Of course, if you see something that you want to upgrade from this library, or a
 
 ##Release History
 
-###**JAVA**
-
-* **0.1.0** 
-  * **CHANGE**: Folder refactor under **UI package**
-  * **CHANGE**: Modified **BasePresenter** method **registerView** to **attachView** in order to get more consistence
-  * **CHANGE**: Added new **runOnBackground** version in **BaseInteractor** that uses a ScheduledExecutorService and also cancel method to stop execution
-  * **CHANGE**: Added Custom Views to extend **BaseRelativeLayout, BaseFrameLayout and BaseLinearLayout**
-* **0.0.3**
-  * **CHANGE**: Removed **ButterKnife** annotation processor	
-  * **CHANGE**: Rename **mvphelper** library to library
-* **0.0.2**
-  * **CHANGE**: Minor updates
-* **0.0.1**
-  * Work in progress
-
 ###**KOTLIN**
 
 **0.0.1**
@@ -288,4 +218,4 @@ Of course, if you see something that you want to upgrade from this library, or a
 
 ##License
 
-Distributed under the **MIT license**. See [LICENSE](https://github.com/BlackBoxVision/mvp-helpers/blob/master/LICENSE) for more information.
+Distributed under the **MIT license**. See [LICENSE](https://github.com/BlackBoxVision/mvp-helpers/blob/kotlin/LICENSE) for more information.
