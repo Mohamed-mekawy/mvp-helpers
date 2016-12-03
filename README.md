@@ -176,7 +176,7 @@ class DetailsFragment : BaseFragment<DetailsPresenter>(), DetailsView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-	presenter!!.findRequiredInformation("ssdWRGD132")
+	    presenter!!.findRequiredInformation("ssdWRGD132")
     }
 
     override fun onInfoReceived(information: Bundle) {
@@ -195,7 +195,7 @@ The standard **ButterKnife** library is included by default. But there is a miss
 
 ```gradle
 dependencies {
-  annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }
 ```
 
