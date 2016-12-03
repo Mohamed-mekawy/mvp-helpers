@@ -13,9 +13,7 @@ Check the following instructions under this **README** in order to get a project
 
 ##Installation
 
-Actually I don't have this library in **JCenter/Maven Central**, so if you want to use, follow the instructions. The library is distributed for Java and Kotlin. 
-
-###Kotlin version
+Actually I don't have this library in **JCenter/Maven Central**, so if you want to use, follow the instructions. The library is distributed for Java and Kotlin.
 
 - Add it in your root build.gradle at the end of repositories:
 ```gradle
@@ -210,8 +208,6 @@ If you found a bug, or you have an answer, or whatever. Please, open an [issue](
 Of course, if you see something that you want to upgrade from this library, or a bug that needs to be solved, **PRs are welcome!**
 
 ##Release History
-
-###**KOTLIN**
 
 **0.0.1**
   * Work in progress
