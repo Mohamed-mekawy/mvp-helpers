@@ -28,7 +28,7 @@ class DetailsFragment : BaseFragment<DetailsPresenter>(), DetailsView {
     }
 
     override fun addPresenter(): DetailsPresenter {
-        return DetailsPresenter()
+        return DetailsPresenter.newInstance()
     }
 
     override val layout: Int

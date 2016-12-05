@@ -9,7 +9,9 @@ import io.blackbox_vision.mvphelpers.logic.listener.OnSuccessListener
 
 class DetailsInteractor : BaseInteractor() {
 
-    fun retrieveDetailsFromService(id: String, successListener: OnSuccessListener<Bundle>, errorListener: OnErrorListener<String>) {
+    fun retrieveDetailsFromService(id: String,
+                                   successListener: OnSuccessListener<Bundle>,
+                                   errorListener: OnErrorListener<String>) {
         runOnBackground(Runnable {
             //Getting data from somewhere
             val data = MockUtils.getMockedData(id)
@@ -22,5 +24,13 @@ class DetailsInteractor : BaseInteractor() {
                 }
             })
         })
+    }
+
+    companion object {
+        private var detailsInteractor: DetailsInteractor = DetailsInteractor()
+
+        fun newInstance(): DetailsInteractor {
+            return detailsInteractor
+        }
     }
 }
