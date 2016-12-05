@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.Toast
 
 import butterknife.BindView
-import butterknife.ButterKnife
 
 import io.blackbox_vision.helpers.R
 import io.blackbox_vision.helpers.util.MockUtils
